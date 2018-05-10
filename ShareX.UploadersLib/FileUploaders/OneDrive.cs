@@ -27,7 +27,6 @@ using Newtonsoft.Json;
 using ShareX.HelpersLib;
 using ShareX.UploadersLib.Properties;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -60,11 +59,10 @@ namespace ShareX.UploadersLib.FileUploaders
 
     public sealed class OneDrive : FileUploader, IOAuth2
     {
-        private const string AuthorizationEndpoint = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
-        private const string TokenEndpoint = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
         private const int MaxSegmentSize = 64 * 1024 * 1024; // 64 MiB
+        private MicrosoftOAuth2 MicrosoftAuth { get; set; }
 
-        public OAuth2Info AuthInfo { get; set; }
+        public OAuth2Info AuthInfo => MicrosoftAuth.AuthInfo;
         public string FolderID { get; set; }
         public bool AutoCreateShareableLink { get; set; }
 
@@ -76,109 +74,30 @@ namespace ShareX.UploadersLib.FileUploaders
 
         public OneDrive(OAuth2Info authInfo)
         {
-            AuthInfo = authInfo;
-        }
-
-        public string GetAuthorizationURL()
-        {
-            Dictionary<string, string> args = new Dictionary<string, string>();
-            args.Add("client_id", AuthInfo.Client_ID);
-            args.Add("scope", "offline_access files.readwrite");
-            args.Add("response_type", "code");
-            args.Add("redirect_uri", Links.URL_CALLBACK);
-            if (AuthInfo.Proof != null)
+            MicrosoftAuth = new MicrosoftOAuth2(authInfo, this)
             {
-                args.Add("code_challenge", AuthInfo.Proof.CodeChallenge);
-                args.Add("code_challenge_method", AuthInfo.Proof.ChallengeMethod);
-            }
-
-            return URLHelpers.CreateQuery(AuthorizationEndpoint, args);
-        }
-
-        public bool GetAccessToken(string code)
-        {
-            Dictionary<string, string> args = new Dictionary<string, string>();
-            args.Add("client_id", AuthInfo.Client_ID);
-            args.Add("redirect_uri", Links.URL_CALLBACK);
-            args.Add("client_secret", AuthInfo.Client_Secret);
-            args.Add("code", code);
-            args.Add("grant_type", "authorization_code");
-            if (AuthInfo.Proof != null)
-            {
-                args.Add("code_verifier", AuthInfo.Proof.CodeVerifier);
-            }
-
-            string response = SendRequestURLEncoded(HttpMethod.POST, TokenEndpoint, args);
-
-            if (!string.IsNullOrEmpty(response))
-            {
-                OAuth2Token token = JsonConvert.DeserializeObject<OAuth2Token>(response);
-
-                if (token != null && !string.IsNullOrEmpty(token.access_token))
-                {
-                    token.UpdateExpireDate();
-                    AuthInfo.Token = token;
-                    return true;
-                }
-            }
-
-            return false;
+                Scope = "Files.ReadWrite"
+            };
         }
 
         public bool RefreshAccessToken()
         {
-            if (OAuth2Info.CheckOAuth(AuthInfo) && !string.IsNullOrEmpty(AuthInfo.Token.refresh_token))
-            {
-                Dictionary<string, string> args = new Dictionary<string, string>();
-                args.Add("client_id", AuthInfo.Client_ID);
-                args.Add("client_secret", AuthInfo.Client_Secret);
-                args.Add("refresh_token", AuthInfo.Token.refresh_token);
-                args.Add("grant_type", "refresh_token");
-
-                string response = SendRequestURLEncoded(HttpMethod.POST, TokenEndpoint, args);
-
-                if (!string.IsNullOrEmpty(response))
-                {
-                    OAuth2Token token = JsonConvert.DeserializeObject<OAuth2Token>(response);
-
-                    if (token != null && !string.IsNullOrEmpty(token.access_token))
-                    {
-                        token.UpdateExpireDate();
-                        string refresh_token = AuthInfo.Token.refresh_token;
-                        AuthInfo.Token = token;
-                        AuthInfo.Token.refresh_token = refresh_token;
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return MicrosoftAuth.RefreshAccessToken();
         }
 
         public bool CheckAuthorization()
         {
-            if (OAuth2Info.CheckOAuth(AuthInfo))
-            {
-                if (AuthInfo.Token.IsExpired && !RefreshAccessToken())
-                {
-                    Errors.Add("Refresh access token failed.");
-                    return false;
-                }
-            }
-            else
-            {
-                Errors.Add("Login is required.");
-                return false;
-            }
-
-            return true;
+            return MicrosoftAuth.CheckAuthorization();
         }
 
-        private NameValueCollection GetAuthHeaders()
+        public string GetAuthorizationURL()
         {
-            NameValueCollection headers = new NameValueCollection();
-            headers.Add("Authorization", "Bearer " + AuthInfo.Token.access_token);
-            return headers;
+            return MicrosoftAuth.GetAuthorizationURL();
+        }
+
+        public bool GetAccessToken(string code)
+        {
+            return MicrosoftAuth.GetAccessToken(code);
         }
 
         private string GetFolderUrl(string folderID)
@@ -212,7 +131,7 @@ namespace ShareX.UploadersLib.FileUploaders
             string url = URLHelpers.BuildUri("https://graph.microsoft.com", $"/v1.0/{folderPath}:/{fileName}:/createUploadSession");
 
             AllowReportProgress = false;
-            string response = SendRequest(HttpMethod.POST, url, json, ContentTypeJSON, headers: GetAuthHeaders());
+            string response = SendRequest(HttpMethod.POST, url, json, ContentTypeJSON, headers: MicrosoftAuth.GetAuthHeaders());
             AllowReportProgress = true;
 
             OneDriveUploadSession session = JsonConvert.DeserializeObject<OneDriveUploadSession>(response);
@@ -292,7 +211,7 @@ namespace ShareX.UploadersLib.FileUploaders
             });
 
             string response = SendRequest(HttpMethod.POST, $"https://graph.microsoft.com/v1.0/me/drive/items/{id}/createLink", json, ContentTypeJSON,
-                headers: GetAuthHeaders());
+                headers: MicrosoftAuth.GetAuthHeaders());
 
             OneDrivePermission permissionInfo = JsonConvert.DeserializeObject<OneDrivePermission>(response);
 
@@ -314,7 +233,7 @@ namespace ShareX.UploadersLib.FileUploaders
             args.Add("select", "id,name");
             args.Add("filter", "folder ne null");
 
-            string response = SendRequest(HttpMethod.GET, $"https://graph.microsoft.com/v1.0/{folderPath}/children", args, GetAuthHeaders());
+            string response = SendRequest(HttpMethod.GET, $"https://graph.microsoft.com/v1.0/{folderPath}/children", args, MicrosoftAuth.GetAuthHeaders());
 
             if (response != null)
             {
