@@ -15977,6 +15977,33 @@ Using an encrypted library disables sharing.</value>
   <data name="&gt;&gt;tpVgyme.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
+  <data name="tpOneNote.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tpOneNote.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tpOneNote.Size" type="System.Drawing.Size, System.Drawing">
+    <value>972, 537</value>
+  </data>
+  <data name="tpOneNote.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="tpOneNote.Text" xml:space="preserve">
+    <value>OneNote</value>
+  </data>
+  <data name="&gt;&gt;tpOneNote.Name" xml:space="preserve">
+    <value>tpOneNote</value>
+  </data>
+  <data name="&gt;&gt;tpOneNote.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tpOneNote.Parent" xml:space="preserve">
+    <value>tcImageUploaders</value>
+  </data>
+  <data name="&gt;&gt;tpOneNote.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
   <data name="tcImageUploaders.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>

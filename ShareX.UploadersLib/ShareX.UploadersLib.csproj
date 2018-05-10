@@ -230,11 +230,13 @@
     <Compile Include="FileUploaders\GfycatUploader.cs" />
     <Compile Include="Helpers\CustomUploaderArgumentInput.cs" />
     <Compile Include="Helpers\EscapeHelper.cs" />
-    <Compile Include="Helpers\GoogleOAuth2.cs" />
+    <Compile Include="Helpers\OAuth\Providers\MicrosoftOAuth2.cs" />
+    <Compile Include="Helpers\OAuth\Providers\GoogleOAuth2.cs" />
     <Compile Include="Helpers\OAuth\IOAuthBase.cs" />
     <Compile Include="Helpers\OAuth\OAuth2ProofKey.cs" />
     <Compile Include="Helpers\SSLBypassHelper.cs" />
     <Compile Include="BaseServices\URLSharingService.cs" />
+    <Compile Include="ImageUploaders\OneNote.cs" />
     <Compile Include="OtherServices\OCRSpace.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -961,6 +963,15 @@
     <PackageReference Include="SSH.NET">
       <Version>2016.1.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder-horizontal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\note-book.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Favicons\OneNote.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

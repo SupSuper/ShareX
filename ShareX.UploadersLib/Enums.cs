@@ -49,6 +49,8 @@ namespace ShareX.UploadersLib
         Chevereto,
         [Description("vgy.me")]
         Vgyme,
+        [Description("OneNote")]
+        OneNote,
         CustomImageUploader, // Localized
         FileUploader // Localized
     }

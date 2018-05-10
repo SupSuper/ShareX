@@ -209,6 +209,16 @@ namespace ShareX.UploadersLib.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap folder_horizontal {
+            get {
+                object obj = ResourceManager.GetObject("folder_horizontal", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap folder_network {
             get {
                 object obj = ResourceManager.GetObject("folder_network", resourceCulture);
@@ -432,6 +442,16 @@ namespace ShareX.UploadersLib.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap note_book {
+            get {
+                object obj = ResourceManager.GetObject("note_book", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paste verification code here.
         /// </summary>
         internal static string OAuthControl_OAuthControl_PasteVerificationCodeHere {
@@ -492,6 +512,16 @@ namespace ShareX.UploadersLib.Properties {
         internal static string OneDrive_RootFolder_Root_folder {
             get {
                 return ResourceManager.GetString("OneDrive_RootFolder_Root_folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon OneNote {
+            get {
+                object obj = ResourceManager.GetObject("OneNote", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

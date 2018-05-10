@@ -98,6 +98,12 @@ namespace ShareX.UploadersLib
 
         #endregion vgy.me
 
+        #region OneNote
+
+        public OAuth2Info OneNoteOAuth2Info = null;
+
+        #endregion OneNote
+
         #endregion Image uploaders
 
         #region Text uploaders

@@ -651,6 +651,7 @@
             this.lblWidthHint = new System.Windows.Forms.Label();
             this.ttlvMain = new ShareX.HelpersLib.TabToListView();
             this.actRapidShareAccountType = new ShareX.UploadersLib.AccountTypeControl();
+            this.tpOneNote = new System.Windows.Forms.TabPage();
             this.tpOtherUploaders.SuspendLayout();
             this.tcOtherUploaders.SuspendLayout();
             this.tpTwitter.SuspendLayout();
@@ -4737,6 +4738,7 @@
             this.tcImageUploaders.Controls.Add(this.tpGooglePhotos);
             this.tcImageUploaders.Controls.Add(this.tpChevereto);
             this.tcImageUploaders.Controls.Add(this.tpVgyme);
+            this.tcImageUploaders.Controls.Add(this.tpOneNote);
             resources.ApplyResources(this.tcImageUploaders, "tcImageUploaders");
             this.tcImageUploaders.Name = "tcImageUploaders";
             this.tcImageUploaders.SelectedIndex = 0;
@@ -5309,6 +5311,12 @@
             resources.ApplyResources(this.actRapidShareAccountType, "actRapidShareAccountType");
             this.actRapidShareAccountType.Name = "actRapidShareAccountType";
             this.actRapidShareAccountType.SelectedAccountType = ShareX.UploadersLib.AccountType.Anonymous;
+            // 
+            // tpOneNote
+            // 
+            resources.ApplyResources(this.tpOneNote, "tpOneNote");
+            this.tpOneNote.Name = "tpOneNote";
+            this.tpOneNote.UseVisualStyleBackColor = true;
             // 
             // UploadersConfigForm
             // 
@@ -6113,5 +6121,6 @@
         private System.Windows.Forms.ListBox lbSharedFolderAccounts;
         private System.Windows.Forms.Label lblGoogleCloudStoragePathPreviewLabel;
         private System.Windows.Forms.Label lblGoogleCloudStoragePathPreview;
+        internal System.Windows.Forms.TabPage tpOneNote;
     }
 }
